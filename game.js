@@ -8,13 +8,13 @@ gameState.play.prototype.create = function() {
     * Jump
     */
 
-    this.hero = game.add.sprite(20, 100, 'white');
+    this.hero = game.add.sprite(20, game.height - 80, 'white');
     this.hero.scale.setTo(3, 3);
 
     this.hero.body.gravity.y = 1000;
 
     this.hero.events.onOutOfBounds.add(function() {
-        console.log('out');
+        this.hero.x = 20;
     }, this);
 
     spaceKey.onDown.add(function() {
@@ -30,8 +30,13 @@ gameState.play.prototype.create = function() {
     this.ground = game.add.sprite(0, game.height - 50, 'white');
     this.ground.scale.x = 60;
     this.ground.body.immovable = true;
-    console.log(this.ground);
-    console.log(this.ground.body.friction);
+
+    /*
+    * Enemy Configs
+    */
+    this.enemies = game.add.group();
+    var enemy = this.enemies.create(300, game.height - 80, 'white');
+    enemy.scale.setTo(3, 3);
 };
 
 gameState.play.prototype.update = function() {
@@ -41,6 +46,11 @@ gameState.play.prototype.update = function() {
 
     // Stop hero when touch ground
     this.game.physics.collide(this.hero, this.ground);
+
+    // kills hero when touch enemy
+    this.game.physics.overlap(this.hero, this.enemies, function(hero, enemy) {
+        hero.x = 20;
+    }, null, this);
 
     // makes hero walk
     this.hero.body.velocity.x = 200;
