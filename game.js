@@ -1,6 +1,6 @@
 var stage = {
   map: [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // STAGE 1
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // STAGE 1
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // STAGE 2
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], // STAGE 3
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], // STAGE 4
@@ -98,8 +98,8 @@ gameState.play.prototype.drawLevel = function(stage) {
       var left = i * 30;
       var enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
     }
-  };
-}
+  }
+};
 
 gameState.play.prototype.jumpHero = function() {
   if(this.hero.body.touching.down) {
@@ -109,7 +109,7 @@ gameState.play.prototype.jumpHero = function() {
     this.rotation = this.game.add.tween(this.hero).to({angle: this.hero.angle + 180}, 700, Phaser.Easing.Linear.None);
     this.rotation.start();
   }
-}
+};
 
 game.state.add('play', this.gameState.play);
 game.state.start('play');
