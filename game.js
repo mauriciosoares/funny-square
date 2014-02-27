@@ -16,8 +16,8 @@ gameState.play.prototype.create = function() {
 
 
   // load sounds
-  this.jumpSounds = this.game.add.audio('jump');
-  this.hitSounds = this.game.add.audio('hit');
+  this.jumpSound = this.game.add.audio('jump');
+  this.hitSound = this.game.add.audio('hit');
 
 
   spaceKey.onDown.add(this.jumpHero, this);
@@ -85,7 +85,8 @@ gameState.play.prototype.update = function() {
 };
 
 gameState.play.prototype.killHero = function() {
-  this.hitSounds.play();
+  this.jumpSound.pause();
+  this.hitSound.play();
   configs.heroKills += 1;
   this.killText.setText('Kills: ' + configs.heroKills);
 
@@ -148,7 +149,7 @@ gameState.play.prototype.endGame = function() {
 
 gameState.play.prototype.jumpHero = function() {
   if(this.hero.body.touching.down) {
-    this.jumpSounds.play();
+    this.jumpSound.play();
     this.hero.body.velocity.y = -350;
 
     // this.jump_s.play('', 0, 0.1);
