@@ -21,10 +21,14 @@ gameState.play.prototype.preload = function() {
   * Preload Congis
   * Background color
   * white sprite
+  * Sounds
   */
   this.game.stage.backgroundColor = '#999999';
 
   this.game.load.image('hero', 'assets/hero.jpg');
   this.game.load.image('floor', 'assets/floor.jpg');
   this.game.load.image('enemy', 'assets/enemy.jpg');
+
+  this.game.load.audio('jump', 'assets/effects/jump.mp3');
+  this.game.load.audio('hit', 'assets/effects/hit.mp3');
 };

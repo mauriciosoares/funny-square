@@ -14,8 +14,13 @@ gameState.play.prototype.create = function() {
 
   this.killText = game.add.text(20, 20, 'Kills: ' + configs.heroKills, { font: '18px Arial', fill: '#FFFFFF' });
 
-  spaceKey.onDown.add(this.jumpHero, this);
 
+  // load sounds
+  this.jumpSounds = this.game.add.audio('jump');
+  this.hitSounds = this.game.add.audio('hit');
+
+
+  spaceKey.onDown.add(this.jumpHero, this);
   /*
   * Hero configs
   */
@@ -80,6 +85,7 @@ gameState.play.prototype.update = function() {
 };
 
 gameState.play.prototype.killHero = function() {
+  this.hitSounds.play();
   configs.heroKills += 1;
   this.killText.setText('Kills: ' + configs.heroKills);
 
@@ -87,19 +93,19 @@ gameState.play.prototype.killHero = function() {
 };
 
 gameState.play.prototype.drawLevel = function(stage) {
-  if(!stage) {
-    return this.endGame();
-  }
   this.enemies.forEachAlive(function(enemy) {
     enemy.kill();
   });
+
+  if(!stage) {
+    return this.endGame();
+  }
 
   var stageLentgh = stage.length;
   for (var i = 0; i < stage.length; i += 1) {
 
     var enemy, left;
     if(stage[i] == 1) {
-      return false;
       // 1 = normal block
       left = i * 30;
       enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
@@ -142,6 +148,7 @@ gameState.play.prototype.endGame = function() {
 
 gameState.play.prototype.jumpHero = function() {
   if(this.hero.body.touching.down) {
+    this.jumpSounds.play();
     this.hero.body.velocity.y = -350;
 
     // this.jump_s.play('', 0, 0.1);
