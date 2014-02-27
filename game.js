@@ -70,7 +70,6 @@ gameState.play.prototype.update = function() {
   // Stop hero when touch ground
   this.game.physics.collide(this.hero, this.ground);
 
-
   if(this.hero.body.touching.down) {
     this.hero.body.velocity.x = 200;
   }
