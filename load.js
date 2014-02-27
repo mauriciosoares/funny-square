@@ -8,6 +8,8 @@
 var configs = configs || {};
   configs.canvasWidth = 600;
   configs.canvasHeight = 320;
+  configs.textStyle = { font: "12px Arial", fill: "#FFFFFF" };
+  configs.heroKills = 0;
 
 var game = new Phaser.Game(configs.canvasWidth, configs.canvasHeight, Phaser.AUTO, '');
 
