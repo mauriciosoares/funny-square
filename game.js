@@ -33,8 +33,9 @@ gameState.play.prototype.create = function() {
   // if hero touch end of screen, goes to next level
   this.hero.events.onOutOfBounds.add(function() {
     stage.current += 1;
+    this.hero.y = 160;
     this.drawLevel(stage.map[stage.current]);
-    this.initHero();
+    this.killHero();
   }, this);
 
 
@@ -64,6 +65,11 @@ gameState.play.prototype.initHero = function() {
   this.hero.angle = 0;
   this.hero.body.velocity.y = 0;
   this.hero.body.velocity.x = 0;
+
+  var _this = this;
+  setTimeout(function() {
+    _this.hero.body.velocity.x = 0;
+  }, 5);
 };
 
 gameState.play.prototype.update = function() {
@@ -75,11 +81,12 @@ gameState.play.prototype.update = function() {
   this.game.physics.collide(this.hero, this.ground);
 
   if(this.hero.body.touching.down) {
-    this.hero.body.velocity.x = 200;
+      this.hero.body.velocity.x = 200;
   }
 
   // kills hero when touch enemy
   this.game.physics.overlap(this.hero, this.enemies, function(hero, enemy) {
+    // this.hero.body.velocity.x = 0;
     this.killHero();
   }, null, this);
 };
@@ -108,6 +115,7 @@ gameState.play.prototype.drawLevel = function(stage) {
     var enemy, left;
     if(stage[i] == 1) {
       // 1 = normal block
+      return;
       left = i * 30;
       enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
     } else if(stage[i] == 2) {
