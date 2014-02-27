@@ -94,9 +94,15 @@ gameState.play.prototype.drawLevel = function(stage) {
 
   var stageLentgh = stage.length;
   for (var i = 0; i < stage.length; i += 1) {
+
+    var enemy, left;
     if(stage[i] == 1) {
-      var left = i * 30;
-      var enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
+      // 1 = normal block
+      left = i * 30;
+      enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
+    } else if(stage[i] == 2) {
+      // 2 = bigger block
+      enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
     }
   }
 };
