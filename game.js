@@ -1,10 +1,10 @@
 var stage = {
   map: [
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // STAGE 1
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // STAGE 2
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], // STAGE 3
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], // STAGE 4
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1] // STAGE 5
+    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], // STAGE 1
+    [0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 3], // STAGE 2
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0], // STAGE 3
+    [0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0], // STAGE 4
+    [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 2, 0, 0, 0, 0, 1] // STAGE 5
   ],
   current: 0
 };
@@ -12,7 +12,7 @@ gameState.play.prototype.create = function() {
   // hotkey for spacebar
   var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-  this.text = game.add.text(20, 20, 'Kills: ' + configs.heroKills, configs.textStyle);
+  this.killText = game.add.text(20, 20, 'Kills: ' + configs.heroKills, { font: '18px Arial', fill: '#FFFFFF' });
 
   spaceKey.onDown.add(this.jumpHero, this);
 
@@ -22,7 +22,6 @@ gameState.play.prototype.create = function() {
   this.hero = this.game.add.sprite(20, 160, 'hero');
   this.hero.anchor.setTo(0.5, 0.5);
   this.hero.body.gravity.y = 1000;
-  this.heroVelocity = 0;
 
   this.initHero();
 
@@ -30,7 +29,7 @@ gameState.play.prototype.create = function() {
   this.hero.events.onOutOfBounds.add(function() {
     stage.current += 1;
     this.drawLevel(stage.map[stage.current]);
-    this.killHero();
+    this.initHero();
   }, this);
 
 
@@ -82,12 +81,15 @@ gameState.play.prototype.update = function() {
 
 gameState.play.prototype.killHero = function() {
   configs.heroKills += 1;
-  this.text.setText('Kills: ' + configs.heroKills);
+  this.killText.setText('Kills: ' + configs.heroKills);
 
   this.initHero();
 };
 
 gameState.play.prototype.drawLevel = function(stage) {
+  if(!stage) {
+    return this.endGame();
+  }
   this.enemies.forEachAlive(function(enemy) {
     enemy.kill();
   });
@@ -97,14 +99,45 @@ gameState.play.prototype.drawLevel = function(stage) {
 
     var enemy, left;
     if(stage[i] == 1) {
+      return false;
       // 1 = normal block
       left = i * 30;
       enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
     } else if(stage[i] == 2) {
       // 2 = bigger block
-      enemy = this.enemies.create(left, this.game.height - 80, 'enemy');
+      left = i * 30;
+      enemy = this.enemies.create(left, this.game.height - 89, 'enemy');
+      enemy.scale.setTo(1, 1.3);
+    } else if(stage[i] == 3) {
+      // 3 = smaller block
+      left = i * 30;
+      enemy = this.enemies.create(left, this.game.height - 59, 'enemy');
+      enemy.scale.setTo(1, 0.3);
+    } else if(stage[i] == 4) {
+      // 3 = smaller block
+      left = i * 30;
+      enemy = this.enemies.create(left, this.game.height - 87, 'enemy');
+      enemy.scale.setTo(1, 0.3);
     }
   }
+};
+
+gameState.play.prototype.endGame = function() {
+  this.hero.kill();
+  this.ground.kill();
+  this.killText.setText('');
+
+  var killMessage = '';
+  if(configs.heroKills === 0) {
+    killMessage = 'You did\'t die, that\'s impressive!';
+  } else if(configs.heroKills == 1) {
+    killMessage = 'You just died once, you are pretty good!';
+  } else {
+    killMessage = 'You died ' + configs.heroKills + ' times, I know you can do better!';
+  }
+
+  this.killText = game.add.text(40, 40, 'You have finished the game! \n' + killMessage, { font: '20px Arial', fill: '#FFFFFF' });
+  // configs.heroKills
 };
 
 gameState.play.prototype.jumpHero = function() {
