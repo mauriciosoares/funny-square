@@ -1,7 +1,6 @@
 gameStates.End = function() {};
 
 gameStates.End.prototype.create = function() {
-  console.log('teste');
   var killMessage = '';
   if(configs.heroKills === 0) {
     killMessage = 'You did\'t die, that\'s impressive!';
