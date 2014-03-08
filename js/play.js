@@ -85,11 +85,10 @@ gameStates.Play.prototype.initHero = function() {
   this.hero.body.velocity.y = 0;
   this.hero.body.velocity.x = 0;
 
-  var _this = this;
   // not proud of it, but little tricky for a bug that i could not resolve
   setTimeout(function() {
-    _this.hero.body.velocity.x = 0;
-  }, 5);
+    this.hero.body.velocity.x = 0;
+  }.bind(this), 5);
 };
 
 gameStates.Play.prototype.killHero = function() {
